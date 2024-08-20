@@ -1,0 +1,34 @@
+{
+    "name": "githen/laravel-eqxiu",
+    "description": "基于laravel的基于laravel的易企秀内容中台全",
+    "license": "MIT",
+    "type": "library",
+    "autoload": {
+      "psr-4": {
+        "Githen\\LaravelEqxiu\\": "src"
+      }
+    },
+    "authors": [
+      {
+        "name": "nanjishidu",
+        "email": "yijialiu212@gmail.com"
+      }
+    ],
+    "require": {
+      "php": "^7.3",
+      "ext-json": "*",
+      "illuminate/support": "^6.20",
+      "guzzlehttp/guzzle": "~6.0"
+    },
+    "extra": {
+      "laravel": {
+        "providers": [
+          "Githen\\LaravelEqxiu\\Providers\\EqxiuServiceProvider"
+        ],
+        "aliases": {
+          "Eqxiu": "Githen\\LaravelEqxiu\\Facades\\Eqxiu"
+        }
+      }
+    }
+  }
+  
