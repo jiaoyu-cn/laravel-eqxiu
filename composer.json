@@ -1,6 +1,6 @@
 {
     "name": "githen/laravel-eqxiu",
-    "description": "基于laravel的基于laravel的易企秀内容中台全",
+    "description": "基于laravel的易企秀内容中台",
     "license": "MIT",
     "type": "library",
     "autoload": {
