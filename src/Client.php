@@ -72,21 +72,33 @@ class Client
         $this->appKey = $appKey;
     }
 
+    /**
+     * @return string
+     */
     public function getSecretId(): string
     {
         return $this->secretId;
     }
 
+    /**
+     * @param string $secretId
+     */
     public function setSecretId(string $secretId): void
     {
         $this->secretId = $secretId;
     }
 
+    /**
+     * @return string
+     */
     public function getSecretKey(): string
     {
         return $this->secretKey;
     }
 
+    /**
+     * @param string $secretKey
+     */
     public function setSecretKey(string $secretKey): void
     {
         $this->secretKey = $secretKey;
@@ -113,8 +125,9 @@ class Client
 
 
     /**
+     * @param $method
      * @param $uri
-     * @param $options
+     * @param $params
      * @return array|mixed
      */
     public function httpRequest($method, $uri, $params = [], $loginMode = 'token')
@@ -126,7 +139,6 @@ class Client
             'timeout' => 10,
             'verify' => false,
             'handler' => $handlerStack,
-
         ]);
         $options = [];
         if ($loginMode == 'signature') {
@@ -141,7 +153,11 @@ class Client
             $params['signature'] = $this->genSignature($params, $this->getSecretKey());
         }
         if ($loginMode == 'token') {
-            $token = $this->oauthToken();
+            $tokenResp = $this->oauthToken();
+            if ($tokenResp['code'] != '0000') {
+                return $this->message($tokenResp['code'], $tokenResp['message']);
+            }
+            $token = $tokenResp['data'];
             $separator = strpos($uri, '?') === false ? '?' : '&';
             $uri = $uri . $separator . 'token=' . $token;
         }
@@ -152,13 +168,18 @@ class Client
         if ($method == 'POST') {
             $options['headers']['Content-Type'] = 'application/x-www-form-urlencoded';
             $options['form_params'] = $params;
+
         }
         try {
             $response = $httpClient->request($method, $uri, $options);
             $content = $response->getBody()->getContents();
             $resp = json_decode($content, true);
             if ($loginMode == 'token' && $resp['code'] == 'A011005') {
-                $tokenXin = $this->oauthToken(true);
+                $tokenXinResp = $this->oauthToken(true);
+                if ($tokenXinResp['code'] != '0000') {
+                    return $this->message($tokenXinResp['code'], $tokenXinResp['message']);
+                }
+                $token = $tokenXinResp['data'];
                 $uri = str_replace($token, $tokenXin, $uri);
                 $response = $httpClient->request($method, $uri, $options);
                 $content = $response->getBody()->getContents();
