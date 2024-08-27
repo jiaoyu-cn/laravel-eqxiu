@@ -44,6 +44,9 @@ return [
     // 产品秘钥
     'app_id' => '',
     'app_key' => '',
+    // 产品秘钥
+    'signature_key' => '',
+    'encoding_key' => '',
     'log_channel' => 'eqxiu',//写入日志频道，空不写入
 ];
 ```

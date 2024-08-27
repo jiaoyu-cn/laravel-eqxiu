@@ -22,10 +22,10 @@ trait BaseTrait
         }
         $ttl = $resp['map']['expires'] ?? 0;
         $token = $resp['map']['token'] ?? '';
-        if (empty($token)) {
+        if (empty($token) || $ttl < 10) {
             return ['code' => '2000', '令牌已超时'];
         }
-        cache([$this->getSecretId() => $token], $ttl - 5);
+        cache([$this->getSecretId() => $token], $ttl - 10);
         return ['code' => '0000', 'message' => 'success', 'data' => $token];;
     }
 
