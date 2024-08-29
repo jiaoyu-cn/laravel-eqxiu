@@ -18,12 +18,12 @@ trait BaseTrait
         }
         $resp = $this->httpRequest('POST', 'base/oauth/token', [], 'tokenSignature');
         if ($resp['code'] != 200) {
-            return ['code' => '2000', '令牌获取失败'];
+            return ['code' => '2000', 'message' => '令牌获取失败'];
         }
         $ttl = $resp['map']['expires'] ?? 0;
         $token = $resp['map']['token'] ?? '';
         if (empty($token) || $ttl < 10) {
-            return ['code' => '2000', '令牌已超时'];
+            return ['code' => '2000', 'message' => '令牌已超时'];
         }
         cache([$this->getSecretId() => $token], $ttl - 10);
         return ['code' => '0000', 'message' => 'success', 'data' => $token];;
@@ -166,4 +166,49 @@ trait BaseTrait
         return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success', $this->parsePaginationData($resp));
     }
 
+    /** 停用企业
+     * @param string $openId 企业在平台侧的唯一ID
+     * @return array|mixed
+     * @author nanjishidu
+     */
+    public function productCorpDisable($openId)
+    {
+        $resp = $this->httpRequest('POST', 'base/product/corp/disable', ['openId' => $openId], 'signature');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success');
+    }
+
+    /** 启用企业
+     * @param string $openId 企业在平台侧的唯一ID
+     * @return array|mixed
+     * @author nanjishidu
+     */
+    public function productCorpEnable($openId)
+    {
+        $resp = $this->httpRequest('POST', 'base/product/corp/enable', ['openId' => $openId], 'signature');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success');
+    }
+
+    /** 更改企业有效期
+     * @param string $openId 企业在平台侧的唯一ID
+     * @param string $expires 过期时间
+     * @return array|mixed
+     * @author nanjishidu
+     */
+    public function productCorpExpire($openId, $expires)
+    {
+        $resp = $this->httpRequest('POST', 'base/product/corp/expire', ['openId' => $openId, 'expires' => $expires], 'signature');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success');
+    }
+
+    /** 更改子企业员工数
+     * @param string $openId 企业在平台侧的唯一ID
+     * @param int $count 可用员工数
+     * @return array|mixed
+     * @author nanjishidu
+     */
+    public function productCorpStaffCount($openId, $count)
+    {
+        $resp = $this->httpRequest('POST', 'base/product/corp/staffCount', ['openId' => $openId, 'count' => $count], 'signature');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success');
+    }
 }
