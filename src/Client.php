@@ -179,7 +179,7 @@ class Client
                 if ($tokenXinResp['code'] != '0000') {
                     return $this->message($tokenXinResp['code'], $tokenXinResp['message']);
                 }
-                $token = $tokenXinResp['data'];
+                $tokenXin = $tokenXinResp['data'];
                 $uri = str_replace($token, $tokenXin, $uri);
                 $response = $httpClient->request($method, $uri, $options);
                 $content = $response->getBody()->getContents();

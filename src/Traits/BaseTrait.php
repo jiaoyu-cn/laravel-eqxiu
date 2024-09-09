@@ -2,7 +2,6 @@
 
 namespace Githen\LaravelEqxiu\Traits;
 
-use Illuminate\Support\Arr;
 
 trait BaseTrait
 {
@@ -37,7 +36,7 @@ trait BaseTrait
     public function oauthCode($openId)
     {
         $resp = $this->httpRequest('POST', 'base/oauth/code', ['openId' => $openId], 'token');
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success', $resp['obj'] ?? '');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success', $resp['obj'] ?? '');
     }
 
     /** 静默登录接口
@@ -53,7 +52,7 @@ trait BaseTrait
         ];
         !empty($redirectURL) && $params['redirectUrl'] = $redirectURL;
         $resp = $this->httpRequest('POST', 'base/oauth/login', $params);
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success', $resp['obj'] ?? '');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success', $resp['obj'] ?? '');
     }
 
     /** 登录退出接口
@@ -64,7 +63,7 @@ trait BaseTrait
     public function oauthLogout($openId)
     {
         $resp = $this->httpRequest('POST', 'base/auth/logout', ['openId' => $openId], 'token');
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success', $resp['obj'] ?? '');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success', $resp['obj'] ?? '');
     }
 
     /** 将企业员工注册到内容中台
@@ -86,7 +85,7 @@ trait BaseTrait
         !empty($phone) && $params['phone'] = $phone;
         !empty($sex) && $params['sex'] = $sex;
         $resp = $this->httpRequest('POST', 'base/oauth/staff/register', $params, 'token');
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success', $resp['obj']['staffId'] ?? '');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success', $resp['obj']['staffId'] ?? '');
     }
 
     /** 分页查询员工列表
@@ -106,7 +105,7 @@ trait BaseTrait
         !empty($deptId) && $params['deptId'] = $deptId;
         !empty($keyword) && $params['keyword'] = $keyword;
         $resp = $this->httpRequest('GET', 'base/corp/staff/list', $params);
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success', $this->parsePaginationData($resp));
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success', $this->parsePaginationData($resp));
     }
 
     /** 员工删除
@@ -117,7 +116,7 @@ trait BaseTrait
     public function corpStaffDelete($openIds)
     {
         $resp = $this->httpRequest('POST', 'base/corp/staff/delete?openIds=' . $openIds, []);
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success', []);
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success', []);
     }
 
 
@@ -138,7 +137,7 @@ trait BaseTrait
         !empty($accountType) && $params['accountType'] = $accountType;
         !empty($clearingType) && $params['clearingType'] = $clearingType;
         $resp = $this->httpRequest('POST', 'base/corp/create', $params, 'signature');
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success', $resp['map'] ?? '');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success', $resp['map'] ?? '');
     }
 
     /** 企业密钥（授权凭证）查询
@@ -149,7 +148,7 @@ trait BaseTrait
     public function secretDetail($openId)
     {
         $resp = $this->httpRequest('GET', 'base/secret/detail', ['openId' => $openId], 'signature');
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success', $resp['map'] ?? []);
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success', $resp['map'] ?? []);
     }
 
     /** 分页查询员工列表
@@ -163,7 +162,7 @@ trait BaseTrait
     public function productCorpList($pageNo = 1, $pageSize = 10, $accountType = 0, $status = 0)
     {
         $resp = $this->httpRequest('GET', 'base/product/corpList', [], 'signature');
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success', $this->parsePaginationData($resp));
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success', $this->parsePaginationData($resp));
     }
 
     /** 停用企业
@@ -174,7 +173,7 @@ trait BaseTrait
     public function productCorpDisable($openId)
     {
         $resp = $this->httpRequest('POST', 'base/product/corp/disable', ['openId' => $openId], 'signature');
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success');
     }
 
     /** 启用企业
@@ -185,7 +184,7 @@ trait BaseTrait
     public function productCorpEnable($openId)
     {
         $resp = $this->httpRequest('POST', 'base/product/corp/enable', ['openId' => $openId], 'signature');
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success');
     }
 
     /** 更改企业有效期
@@ -197,7 +196,7 @@ trait BaseTrait
     public function productCorpExpire($openId, $expires)
     {
         $resp = $this->httpRequest('POST', 'base/product/corp/expire', ['openId' => $openId, 'expires' => $expires], 'signature');
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success');
     }
 
     /** 更改子企业员工数
@@ -209,6 +208,6 @@ trait BaseTrait
     public function productCorpStaffCount($openId, $count)
     {
         $resp = $this->httpRequest('POST', 'base/product/corp/staffCount', ['openId' => $openId, 'count' => $count], 'signature');
-        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['msg'] ?? 'success');
+        return $this->message($resp['code'] != 200 ? '2000' : '0000', $resp['message'] ?? 'success');
     }
 }
